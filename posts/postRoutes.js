@@ -3,7 +3,7 @@ const db = require('../data/db');
 const router = express.Router();   // defines express
 
 router.post("/", (req, res) => {
-    if (!req.body.content || !req.body.title) {
+    if (!req.body.title || !req.body.contents) {
         return res.status(400).json({
             message: "Missing user name or email",
         })
