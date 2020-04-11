@@ -5,7 +5,7 @@ const router = express.Router();   // defines express
 router.post("/", (req, res) => {
     if (!req.body.title || !req.body.contents) {
         return res.status(400).json({
-            message: "Missing user name or email",
+			message: "Bad request"
         })
     }
     db.insert(req.body)
@@ -15,7 +15,7 @@ router.post("/", (req, res) => {
         .catch((error) => {
             console.log(error)
             res.status(500).json({
-                message: "Error adding the post",
+                message: "There was an error while saving the post to the database",
             })
         })
 });
@@ -23,7 +23,7 @@ router.post("/", (req, res) => {
 router.post('/:id/comments', (req, res) => {
     if (!req.body.text) {
         return res.status(400).json({
-            message: "Missing user name or email",
+            message:"Please provide text for the comment.",
         })
     }
         const post = db.findById(req.params.id);
