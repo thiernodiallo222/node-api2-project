@@ -73,17 +73,24 @@ router.get('/:id', (req, res) => {
 })
 
 router.get('/:id/comments', (req, res) => {
-	const POST= db.findById(req.params.id)
+	 db.findById(req.params.id)
 		.then(post => {
-			if (!POST) {
+			if (!post) {
 				return res.status(404).json({ message: "That specific post was not found " })
-			} 
-		db.findPostComments(req.params.id)
-		.then((comments) => {
-		res.status(200).json(comments);
+			} else {
+				db.findPostComments(req.params.id)
+					.then(comments => {
+						if (comments) {
+							res.status(200).json(comments);
+						} else {
+							res.status(404).json({
+								message: "comments not found !"
+							})
+						}
 					})
-			
-			})
+			}
+					})
+
 		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
