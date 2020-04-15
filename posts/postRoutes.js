@@ -3,21 +3,22 @@ const db = require('../data/db');
 const router = express.Router();   // defines express
 
 router.post("/", (req, res) => {
-    if (!req.body.title || !req.body.contents) {
-        return res.status(400).json({
+	if (!req.body.title || !req.body.contents) {
+		res.status(400).json({
 			message: "Bad request"
-        })
-    }
-    db.insert(req.body)
-        .then((post) => {
-            res.status(201).json(post)
-        })
-        .catch((error) => {
-            console.log(error)
-            res.status(500).json({
-                message: "There was an error while saving the post to the database",
-            })
-        })
+		})
+	} else {
+		db.insert(req.body)
+			.then((post) => {
+				res.status(201).json(post)
+			})
+			.catch((error) => {
+				console.log(error)
+				res.status(500).json({
+					message: "There was an error while saving the post to the database",
+				})
+			})
+	}
 });
 
 router.post('/:id/comments', (req, res) => {
@@ -72,10 +73,17 @@ router.get('/:id', (req, res) => {
 })
 
 router.get('/:id/comments', (req, res) => {
-  db.findPostComments(req.params.id)
+	const POST= db.findById(req.params.id)
+		.then(post => {
+			if (!POST) {
+				return res.status(404).json({ message: "That specific post was not found " })
+			} 
+		db.findPostComments(req.params.id)
 		.then((comments) => {
-			res.status(200).json(comments)
-		})
+		res.status(200).json(comments);
+					})
+			
+			})
 		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
